@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+set( Ceres_DIR /opt/ceres/lib/cmake/Ceres )
 find_package(Ceres REQUIRED)
 
 add_subdirectory(./ThirdParty/GeographicLib/)

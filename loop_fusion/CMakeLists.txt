@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(OpenCV)
 
 
+set( Ceres_DIR /opt/ceres/lib/cmake/Ceres )
 find_package(Ceres REQUIRED)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
