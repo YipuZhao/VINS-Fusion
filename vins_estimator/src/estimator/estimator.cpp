@@ -208,8 +208,7 @@ void Estimator::processMeasurements()
             prevTime = curTime;
 
 	    //
-	    std::cout << "curTime = " << curTime  << std::endl;
-	    
+	    // std::cout << "curTime = " << curTime  << std::endl;
 	    logCurFrame.time_total = ros::Time::now().toSec() - curTime;
 // 	    std::cout << "timestamp = " << logCurFrame.time_stamp 
 // 		      << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
