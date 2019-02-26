@@ -234,9 +234,9 @@ int main(int argc, char **argv)
 
     // add by Yipu
       std::cout << "terminated! saving the time cost log!" << std::endl;
-      estimator.saveTimeLog("/mnt/DATA/tmpLog.txt");
-      std::cout << "move on saving the track log!" << std::endl;
-      estimator.saveAllFrameTrack("/mnt/DATA/tmpTrack.txt");
+      estimator.saveLogging("/mnt/DATA/tmpLog.txt");
+   //   std::cout << "move on saving the track log!" << std::endl;
+   //   estimator.saveAllFrameTrack("/mnt/DATA/tmpTrack.txt");
 
     return 0;
 }

@@ -39,20 +39,41 @@
 
 class timeLog {
 public:
-  timeLog(const double &timeStamp_ = 0, const double &timeCost_1 = 0, const double &timeCost_2 = 0) {
+  timeLog(const double &timeStamp_ = 0) {
     time_stamp = timeStamp_;
-    time_cost_1 = timeCost_1;
-    time_cost_2 = timeCost_2;
+    time_feature = 0;
+    time_poseTrack = 0;
+    time_windowOpt = 0;
+    time_total = 0;
+    //
+    num_poses = 0;
+    num_lmks = 0;
+  };
+  
+  void setZero() {
+    time_stamp = 0;
+    time_feature = 0;
+    time_poseTrack = 0;
+    time_windowOpt = 0;
+    time_total = 0;
+    //
+    num_poses = 0;
+    num_lmks = 0;
   };
 
   double time_stamp;
-  double time_cost_1;
-  double time_cost_2;
+  double time_feature;
+  double time_poseTrack;
+  double time_windowOpt;
+  double time_total;
+  //
+  size_t num_poses;
+  size_t num_lmks;
 };
 
-class trackLog {
+class PoseLog {
 public:
-  trackLog(const double &timeStamp_, const double &Tx_, const double &Ty_, const double &Tz_, 
+  PoseLog(const double &timeStamp_, const double &Tx_, const double &Ty_, const double &Tz_, 
        const double &Qx_, const double &Qy_, const double &Qz_, const double &Qw_) {
     //
     time_stamp = timeStamp_;
@@ -219,28 +240,33 @@ class Estimator
     std::vector<timeLog> logTracking;
     timeLog logCurFrame;
 
-    void saveTimeLog(const std::string &filename) {
+    void saveLogging(const std::string &filename) {
 
       std::cout << std::endl << "Saving " << logTracking.size() << " records to time log file " << filename << " ..." << std::endl;
 
-      std::ofstream fFrameTimeLog;
-      fFrameTimeLog.open(filename.c_str());
-      fFrameTimeLog << std::fixed;
-      fFrameTimeLog << "#frame_time_stamp time_proc_1 time_proc_2" << std::endl;
+      std::ofstream fFrameLog;
+      fFrameLog.open(filename.c_str());
+      fFrameLog << std::fixed;
+      fFrameLog << "#frame_time_stamp time_feature time_poseTrack time_windowOpt time_total pose_num feature_num" << std::endl;
       for(size_t i=0; i<logTracking.size(); i++)
       {
-	  fFrameTimeLog << std::setprecision(6)
+	  fFrameLog << std::setprecision(6)
 			<< logTracking[i].time_stamp << " "
-			<< logTracking[i].time_cost_1 << " "
-			<< logTracking[i].time_cost_2 << std::endl;
+			<< logTracking[i].time_feature << " "
+			<< logTracking[i].time_poseTrack << " "
+			<< logTracking[i].time_windowOpt << " "
+			<< logTracking[i].time_total << " "
+			 << std::setprecision(0)
+			<< logTracking[i].num_poses << " "
+			<< logTracking[i].num_lmks << std::endl;
       }
-      fFrameTimeLog.close();
+      fFrameLog.close();
 
       std::cout << "Finished saving log! " << std::endl;
     }
 
     //
-    std::vector<trackLog> logFramePose;
+    std::vector<PoseLog> logFramePose;
 
     void saveAllFrameTrack(const std::string &filename) {
 

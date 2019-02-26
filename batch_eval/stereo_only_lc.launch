@@ -1,0 +1,13 @@
+<launch>
+
+	<arg name="stereo_config_yaml" />
+
+	<!-- start vins -->
+	<node name="vins_tracking" type="vins_node" pkg="vins" args="$(arg stereo_config_yaml)">
+	</node>
+
+	<!-- start loop closing -->
+	<node name="loop_closing" type="loop_fusion_node" pkg="loop_fusion" args="$(arg stereo_config_yaml)">
+	</node>
+
+</launch>

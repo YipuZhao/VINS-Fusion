@@ -111,6 +111,7 @@ void readParameters(std::string config_file)
     VINS_RESULT_PATH = OUTPUT_FOLDER + "/vio.csv";
     std::cout << "result path " << VINS_RESULT_PATH << std::endl;
     std::ofstream fout(VINS_RESULT_PATH, std::ios::out);
+    fout << "#TimeStamp Tx Ty Tz Qx Qy Qz Qw" << std::endl;
     fout.close();
 
     ESTIMATE_EXTRINSIC = fsSettings["estimate_extrinsic"];

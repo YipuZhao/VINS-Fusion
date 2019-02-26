@@ -58,7 +58,7 @@ void Estimator::inputImage(double t, const cv::Mat &_img, const cv::Mat &_img1)
         featureFrame = featureTracker.trackImage(t, _img, _img1);
     //printf("featureTracker time: %f\n", featureTrackerTime.toc());
     logCurFrame.time_stamp = t;
-    logCurFrame.time_cost_1 = featureTrackerTime.toc();
+    logCurFrame.time_feature = featureTrackerTime.toc() * 1e-3;
     
     if(MULTIPLE_THREAD)  
     {     
@@ -77,6 +77,13 @@ void Estimator::inputImage(double t, const cv::Mat &_img, const cv::Mat &_img1)
         TicToc processTime;
         processMeasurements();
         printf("process time: %f\n", processTime.toc());
+	//
+// 	logCurFrame.time_total = logCurFrame.time_feature + processTime.toc();
+//         std::cout << "timestamp = " << logCurFrame.time_stamp 
+// 		  << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
+// 		  << "; actual time cost per frame = " << logCurFrame.time_total << "              " << std::endl;
+//         logTracking.push_back(logCurFrame);
+// 	logCurFrame.setZero();
     }
     
 }
@@ -200,6 +207,16 @@ void Estimator::processMeasurements()
             processImage(feature.second, feature.first);
             prevTime = curTime;
 
+	    //
+	    std::cout << "curTime = " << curTime  << std::endl;
+	    
+	    logCurFrame.time_total = ros::Time::now().toSec() - curTime;
+// 	    std::cout << "timestamp = " << logCurFrame.time_stamp 
+// 		      << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
+// 		      << "; actual time cost per frame = " << logCurFrame.time_total << "              " << std::endl;
+	    logTracking.push_back(logCurFrame);
+	    logCurFrame.setZero();
+	
             printStatistics(*this, 0);
 
             std_msgs::Header header;
@@ -207,32 +224,26 @@ void Estimator::processMeasurements()
             header.stamp = ros::Time(feature.first);
 
             pubOdometry(*this, header);
-            /*    
             pubKeyPoses(*this, header);
                 pubCameraPose(*this, header);
                 pubPointCloud(*this, header);
                 pubKeyframe(*this);
                 pubTF(*this, header);
-            */
+            
 
             // add by Yipu
-            if (this->solver_flag == Estimator::SolverFlag::NON_LINEAR) {
-                // save real-time published imu state for batch eval
-                Eigen::Quaterniond tmp_Q = Quaterniond(this->Rs[WINDOW_SIZE]);
-                logFramePose.push_back( trackLog( curTime, 
-                            this->Ps[WINDOW_SIZE].x(), 
-                            this->Ps[WINDOW_SIZE].y(),
-                            this->Ps[WINDOW_SIZE].z(),
-                            tmp_Q.x(),
-                            tmp_Q.y(),
-                            tmp_Q.z(),
-                            tmp_Q.w() ) );
-            }
-
-            // add by Yipu    
-	    logCurFrame.time_cost_2 = ros::Time::now().toSec() - curTime - logCurFrame.time_cost_1;
-            std::cout << "timestamp = " << logCurFrame.time_stamp << "; time cost per frame = " << logCurFrame.time_cost_2 << "              " << std::endl;
-            logTracking.push_back(logCurFrame);
+//             if (this->solver_flag == Estimator::SolverFlag::NON_LINEAR) {
+//                 // save real-time published imu state for batch eval
+//                 Eigen::Quaterniond tmp_Q = Quaterniond(this->Rs[WINDOW_SIZE]);
+//                 logFramePose.push_back( PoseLog( curTime, 
+//                             this->Ps[WINDOW_SIZE].x(), 
+//                             this->Ps[WINDOW_SIZE].y(),
+//                             this->Ps[WINDOW_SIZE].z(),
+//                             tmp_Q.x(),
+//                             tmp_Q.y(),
+//                             tmp_Q.z(),
+//                             tmp_Q.w() ) );
+//             }
 
         }
 
@@ -379,6 +390,7 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
     ROS_DEBUG("number of feature: %d", f_manager.getFeatureCount());
     Headers[frame_count] = header;
 
+    TicToc t_optim;
     ImageFrame imageframe(image, header);
     imageframe.pre_integration = tmp_pre_integration;
     all_image_frame.insert(make_pair(header, imageframe));
@@ -458,15 +470,23 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
         if(STEREO && !USE_IMU)
         {
             f_manager.initFramePoseByPnP(frame_count, Ps, Rs, tic, ric);
+	    
+            // add by Yipu    
+	    // log PnP time cost
+	    logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
+	    
             f_manager.triangulate(frame_count, Ps, Rs, tic, ric);
             optimization();
-
             if(frame_count == WINDOW_SIZE)
             {
                 solver_flag = NON_LINEAR;
                 slideWindow();
                 ROS_INFO("Initialization finish!");
             }
+            
+	    // add by Yipu 
+	    // log PnP time cost
+	    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
         }
 
         if(frame_count < WINDOW_SIZE)
@@ -484,8 +504,13 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
     else
     {
         TicToc t_solve;
-        if(!USE_IMU)
+        if(!USE_IMU) {
             f_manager.initFramePoseByPnP(frame_count, Ps, Rs, tic, ric);
+	    
+	    // add by Yipu    
+	    // log PnP time cost
+	    logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
+	}
         f_manager.triangulate(frame_count, Ps, Rs, tic, ric);
         optimization();
         set<int> removeIndex;
@@ -506,6 +531,11 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
             clearState();
             setParameter();
             ROS_WARN("system reboot!");
+	    
+	// add by Yipu 
+	// log PnP time cost
+	logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
+	
             return;
         }
 
@@ -521,6 +551,10 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
         last_R0 = Rs[0];
         last_P0 = Ps[0];
         updateLatestStates();
+	
+	// add by Yipu 
+	// log PnP time cost
+	logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
     }  
 }
 
@@ -1056,6 +1090,10 @@ void Estimator::optimization()
 
     ROS_DEBUG("visual measurement count: %d", f_m_cnt);
     //printf("prepare for ceres: %f \n", t_prepare.toc());
+    
+    //
+    logCurFrame.num_poses = frame_count;
+    logCurFrame.num_lmks = f_m_cnt;
 
     ceres::Solver::Options options;
 
