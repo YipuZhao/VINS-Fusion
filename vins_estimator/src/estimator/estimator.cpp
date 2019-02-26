@@ -57,6 +57,8 @@ void Estimator::inputImage(double t, const cv::Mat &_img, const cv::Mat &_img1)
     else
         featureFrame = featureTracker.trackImage(t, _img, _img1);
     //printf("featureTracker time: %f\n", featureTrackerTime.toc());
+    logCurFrame.time_stamp = t;
+    logCurFrame.time_cost_1 = featureTrackerTime.toc();
     
     if(MULTIPLE_THREAD)  
     {     
@@ -88,8 +90,9 @@ void Estimator::inputIMU(double t, const Vector3d &linearAcceleration, const Vec
     mBuf.unlock();
 
     fastPredictIMU(t, linearAcceleration, angularVelocity);
-    if (solver_flag == NON_LINEAR)
+    if (solver_flag == NON_LINEAR) {
         pubLatestOdometry(latest_P, latest_Q, latest_V, t);
+    }
 }
 
 void Estimator::inputFeature(double t, const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &featureFrame)
@@ -204,11 +207,33 @@ void Estimator::processMeasurements()
             header.stamp = ros::Time(feature.first);
 
             pubOdometry(*this, header);
+            /*    
             pubKeyPoses(*this, header);
-            pubCameraPose(*this, header);
-            pubPointCloud(*this, header);
-            pubKeyframe(*this);
-            pubTF(*this, header);
+                pubCameraPose(*this, header);
+                pubPointCloud(*this, header);
+                pubKeyframe(*this);
+                pubTF(*this, header);
+            */
+
+            // add by Yipu
+            if (this->solver_flag == Estimator::SolverFlag::NON_LINEAR) {
+                // save real-time published imu state for batch eval
+                Eigen::Quaterniond tmp_Q = Quaterniond(this->Rs[WINDOW_SIZE]);
+                logFramePose.push_back( trackLog( curTime, 
+                            this->Ps[WINDOW_SIZE].x(), 
+                            this->Ps[WINDOW_SIZE].y(),
+                            this->Ps[WINDOW_SIZE].z(),
+                            tmp_Q.x(),
+                            tmp_Q.y(),
+                            tmp_Q.z(),
+                            tmp_Q.w() ) );
+            }
+
+            // add by Yipu    
+	    logCurFrame.time_cost_2 = ros::Time::now().toSec() - curTime - logCurFrame.time_cost_1;
+            std::cout << "timestamp = " << logCurFrame.time_stamp << "; time cost per frame = " << logCurFrame.time_cost_2 << "              " << std::endl;
+            logTracking.push_back(logCurFrame);
+
         }
 
         if (! MULTIPLE_THREAD)
