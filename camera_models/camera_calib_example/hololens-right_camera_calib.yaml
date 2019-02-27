@@ -1,0 +1,16 @@
+%YAML:1.0
+---
+model_type: PINHOLE
+camera_name: hololens-right
+image_width: 480
+image_height: 640
+distortion_parameters:
+   k1: -2.1792249422819019e-02
+   k2: -1.7541600012978668e-02
+   p1: -4.1915204442904697e-03
+   p2: -1.2962821270625540e-02
+projection_parameters:
+   fx: 4.4730127219036234e+02
+   fy: 4.4308849509165213e+02
+   cx: 2.2568014430851863e+02
+   cy: 3.0278123605126456e+02
