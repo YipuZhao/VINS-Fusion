@@ -15,8 +15,18 @@ find_package(catkin REQUIRED COMPONENTS
     roslib
     )
 
-find_package(OpenCV)
-
+# customize opencv dir
+if ($ENV{ROS_DISTRO} STREQUAL "indigo")
+      set( OpenCV_DIR /opt/opencv2/share/OpenCV )
+      find_package(OpenCV 2.4.13 REQUIRED)
+elseif ($ENV{ROS_DISTRO} STREQUAL "kinetic")
+      set( OpenCV_DIR /opt/opencv3/share/OpenCV )
+      find_package(OpenCV 3.4.1 REQUIRED
+                 PATHS /opt/opencv3
+                 NO_DEFAULT_PATH)
+endif()
+MESSAGE("OpenCV include dir: " ${OpenCV_INCLUDE_DIRS})
+MESSAGE("OpenCV libs: " ${OpenCV_LIBS})
 
 set( Ceres_DIR /opt/ceres/lib/cmake/Ceres )
 find_package(Ceres REQUIRED)
