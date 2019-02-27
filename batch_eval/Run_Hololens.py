@@ -16,7 +16,7 @@ Number_GF_List = [150];
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
-Config_Yaml = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/hololens/hololens_stereo_config_v2.yaml'
+Config_Yaml = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/hololens/hololens-stereo_config.yaml'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
