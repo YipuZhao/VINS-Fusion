@@ -5,13 +5,13 @@
 imu: 0         
 num_of_cam: 2  
 
-imu_topic: "/imu0"
+imu_topic: "none"
 image0_topic: "/cam0/image_raw"
 image1_topic: "/cam1/image_raw"
 output_path: "/mnt/DATA/"
 
-cam0_calib: "cam0_mei.yaml"
-cam1_calib: "cam1_mei.yaml"
+cam0_calib: "cam0_pinhole.yaml"
+cam1_calib: "cam1_pinhole.yaml"
 image_width: 752
 image_height: 480
    

@@ -5,7 +5,7 @@
 imu: 0         
 num_of_cam: 2  
 
-imu_topic: "/imu0"
+imu_topic: "none"
 image0_topic: "/left_cam/image_raw"
 image1_topic: "/right_cam/image_raw"
 output_path: "/mnt/DATA/"
