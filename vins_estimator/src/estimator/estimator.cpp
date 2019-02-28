@@ -213,7 +213,8 @@ void Estimator::processMeasurements()
 // 	    std::cout << "timestamp = " << logCurFrame.time_stamp 
 // 		      << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
 // 		      << "; actual time cost per frame = " << logCurFrame.time_total << "              " << std::endl;
-	    logTracking.push_back(logCurFrame);
+	    if (logTracking.time_stamp > 0)
+            logTracking.push_back(logCurFrame);
 	    logCurFrame.setZero();
 	
             printStatistics(*this, 0);

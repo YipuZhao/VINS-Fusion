@@ -11,12 +11,12 @@ SeqNameList = ['2019-01-25-15-10_stereo', '2019-01-25-17-30_stereo', '2019-01-24
 
 Result_root = '/mnt/DATA/tmp/Hololens/vins_Mono_Baseline/'
 
-Number_GF_List = [150]; 
+Number_GF_List = [150, 200, 400, 600, 800]; 
 
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
-Config_Yaml = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/hololens/hololens-stereo_config.yaml'
+config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/hololens/hololens-stereo_config'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
@@ -49,6 +49,7 @@ for ri, num_gf in enumerate(Number_GF_List):
             print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
             File_rosbag  = '/mnt/DATA/Datasets/Hololens/BagFiles/' + SeqName + '.bag'
+            Config_Yaml = config_prefix + '_lmk' + str(gf) + '.yaml'
 
             cmd_vinsrun   = str('rosrun vins vins_node ' + Config_Yaml)
             cmd_looprun   = str('rosrun loop_fusion loop_fusion_node ' + Config_Yaml)
