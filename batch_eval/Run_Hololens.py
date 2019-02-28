@@ -49,7 +49,7 @@ for ri, num_gf in enumerate(Number_GF_List):
             print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
             File_rosbag  = '/mnt/DATA/Datasets/Hololens/BagFiles/' + SeqName + '.bag'
-            Config_Yaml = config_prefix + '_lmk' + str(gf) + '.yaml'
+            Config_Yaml = config_prefix + '_lmk' + str(num_gf) + '.yaml'
 
             cmd_vinsrun   = str('rosrun vins vins_node ' + Config_Yaml)
             cmd_looprun   = str('rosrun loop_fusion loop_fusion_node ' + Config_Yaml)
