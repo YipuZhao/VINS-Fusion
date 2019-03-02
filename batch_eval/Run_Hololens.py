@@ -53,7 +53,8 @@ for ri, num_gf in enumerate(Number_GF_List):
 
             cmd_vinsrun   = str('rosrun vins vins_node ' + Config_Yaml)
             cmd_looprun   = str('rosrun loop_fusion loop_fusion_node ' + Config_Yaml)
-            cmd_rosbag = 'rosbag play ' + File_rosbag + ' --clock' # + ' -u 30' # + ' -r 0.3'
+            cmd_rosbag = 'rosbag play ' + File_rosbag + ' --clock -s ' + str(SeqStartTime[sn]) + ' -u ' + str(SeqDuration[sn]) # + ' -r 0.2'
+            # 
             cmd_timelog = str('cp /mnt/DATA/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
             cmd_vinslog = str('cp /mnt/DATA/vio.csv ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory_noLC.txt')
             cmd_looplog = str('cp /mnt/DATA/vio_loop.csv ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory.txt')
