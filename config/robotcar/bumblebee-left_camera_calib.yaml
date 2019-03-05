@@ -1,0 +1,16 @@
+%YAML:1.0
+---
+model_type: PINHOLE
+camera_name: bumblebee-left
+image_width: 512
+image_height: 384
+distortion_parameters:
+   k1: 0
+   k2: 0
+   p1: 0
+   p2: 0
+projection_parameters:
+   fx: 491.522003
+   fy: 491.522003
+   cx: 321.8234865
+   cy: 246.689499
