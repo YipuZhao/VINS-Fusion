@@ -23,6 +23,9 @@ ros::Publisher pub_keyframe_pose;
 ros::Publisher pub_keyframe_point;
 ros::Publisher pub_extrinsic;
 
+//
+ros::Publisher pub_msf_poses;
+
 CameraPoseVisualization cameraposevisual(1, 0, 0, 1);
 static double sum_of_path = 0;
 static Vector3d last_path(0.0, 0.0, 0.0);
@@ -43,6 +46,9 @@ void registerPub(ros::NodeHandle &n)
     pub_keyframe_point = n.advertise<sensor_msgs::PointCloud>("keyframe_point", 1000);
     pub_extrinsic = n.advertise<nav_msgs::Odometry>("extrinsic", 1000);
 
+    //
+    pub_msf_poses = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("pose_cam_for_msf", 1000);
+
     cameraposevisual.setScale(0.1);
     cameraposevisual.setLineWidth(0.01);
 }
@@ -51,7 +57,11 @@ void pubLatestOdometry(const Eigen::Vector3d &P, const Eigen::Quaterniond &Q, co
 {
     nav_msgs::Odometry odometry;
     odometry.header.stamp = ros::Time(t);
+    
     odometry.header.frame_id = "world";
+    // odometry.header.frame_id = "map";
+    // odometry.child_frame_id = "gyro_link";
+
     odometry.pose.pose.position.x = P.x();
     odometry.pose.pose.position.y = P.y();
     odometry.pose.pose.position.z = P.z();
@@ -63,6 +73,45 @@ void pubLatestOdometry(const Eigen::Vector3d &P, const Eigen::Quaterniond &Q, co
     odometry.twist.twist.linear.y = V.y();
     odometry.twist.twist.linear.z = V.z();
     pub_latest_odometry.publish(odometry);
+
+    // NOTE the latest odom could be highly unreliable; therefore being obselete in closed-loop control
+    // publish msf pose 
+ //     ROS_INFO_STREAM("Start publishing msf pose at time " << header);
+      // tf::Matrix3x3 Ric( 0,  0,  1,
+      //                    -1,  0,  0,
+      //                    0,  -1,  0);
+      // tf::Matrix3x3 Ric( 0,  -1,  0,
+      //                    1,  0,  0,
+      //                    0,  0,  1);
+      // tf::Matrix3x3 Ric( 1,  0,  0,
+      //                    0,  1,  0,
+      //                    0,  0,  1);
+      // tf::Quaternion quat ( tfScalar(Q.x()), tfScalar(Q.y()), tfScalar(Q.z()), tfScalar(Q.w()));
+      // tf::Transform tfTiw ( Ric * tf::Matrix3x3( quat ), 
+      //   Ric * tf::Vector3( 
+      //       tfScalar(P.x()), 
+      //       tfScalar(P.y()), 
+      //       tfScalar(P.z()) 
+      //       ) 
+      //   );
+
+      //   geometry_msgs::Transform gmTwi;
+      //   tf::transformTFToMsg(tfTiw, gmTwi);
+
+      //   geometry_msgs::Pose camera_pose_in_imu;
+      //   camera_pose_in_imu.position.x = gmTwi.translation.x;
+      //   camera_pose_in_imu.position.y = gmTwi.translation.y;
+      //   camera_pose_in_imu.position.z = gmTwi.translation.z;
+      //   camera_pose_in_imu.orientation = gmTwi.rotation;
+
+      //   geometry_msgs::PoseWithCovarianceStamped camera_odom_in_imu;
+      //   camera_odom_in_imu.header.stamp = ros::Time(t);
+      //   camera_odom_in_imu.header.frame_id = "map";
+      //   camera_odom_in_imu.pose.pose = camera_pose_in_imu;
+
+      //   pub_msf_poses.publish(camera_odom_in_imu);
+//    
+
 }
 
 void printStatistics(const Estimator &estimator, double t)
@@ -115,7 +164,7 @@ void pubOdometry(const Estimator &estimator, const std_msgs::Header &header)
         nav_msgs::Odometry odometry;
         odometry.header = header;
         odometry.header.frame_id = "world";
-        odometry.child_frame_id = "world";
+        odometry.child_frame_id = "body"; // "world";
         Quaterniond tmp_Q;
         tmp_Q = Quaterniond(estimator.Rs[WINDOW_SIZE]);
         odometry.pose.pose.position.x = estimator.Ps[WINDOW_SIZE].x();
@@ -229,6 +278,49 @@ void pubCameraPose(const Estimator &estimator, const std_msgs::Header &header)
         odometry.pose.pose.orientation.w = R.w();
 
         pub_camera_pose.publish(odometry);
+
+
+            // publish msf pose 
+ //     ROS_INFO_STREAM("Start publishing msf pose at time " << header);
+      // tf::Matrix3x3 Ric( 0,  0,  1,
+      //                    -1,  0,  0,
+      //                    0,  -1,  0);
+      // tf::Matrix3x3 Ric( 0,  -1,  0,
+      //                    1,  0,  0,
+      //                    0,  0,  1);
+      tf::Matrix3x3 Ric( 1,  0,  0,
+                         0,  1,  0,
+                         0,  0,  1);
+      //        tf::Matrix3x3 Ric( -1,  0, 0,
+      //                   0,  -1, 0,  
+      //                   0,  0, 1);
+      tf::Quaternion quat ( tfScalar(R.x()), tfScalar(R.y()), tfScalar(R.z()), tfScalar(R.w()));
+      tf::Transform tfTiw ( Ric * tf::Matrix3x3( quat ), 
+        Ric * tf::Vector3( 
+            tfScalar(P.x()), 
+            tfScalar(P.y()), 
+            tfScalar(P.z()) 
+            ) 
+        );
+
+        geometry_msgs::Transform gmTwi;
+        tf::transformTFToMsg(tfTiw, gmTwi);
+
+        geometry_msgs::Pose camera_pose_in_imu;
+        camera_pose_in_imu.position.x = gmTwi.translation.x;
+        camera_pose_in_imu.position.y = gmTwi.translation.y;
+        camera_pose_in_imu.position.z = gmTwi.translation.z;
+        camera_pose_in_imu.orientation = gmTwi.rotation;
+
+        geometry_msgs::PoseWithCovarianceStamped camera_odom_in_imu;
+        camera_odom_in_imu.header = header;
+        camera_odom_in_imu.header.frame_id = "map";
+        // camera_odom_in_imu.child_frame_id = "gyro_link";
+        camera_odom_in_imu.pose.pose = camera_pose_in_imu;
+
+        pub_msf_poses.publish(camera_odom_in_imu);
+//    
+
 
         cameraposevisual.reset();
         cameraposevisual.add_pose(P, R);
