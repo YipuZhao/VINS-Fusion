@@ -16,7 +16,11 @@ Number_GF_List = [150, 200, 400, 600, 800];
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
+<<<<<<< Updated upstream
 config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/hololens/hololens-stereo_config'
+=======
+Config_Yaml = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/hololens/hololens_stereo_config_v3.yaml'
+>>>>>>> Stashed changes
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
