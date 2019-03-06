@@ -58,9 +58,9 @@ void pubLatestOdometry(const Eigen::Vector3d &P, const Eigen::Quaterniond &Q, co
     nav_msgs::Odometry odometry;
     odometry.header.stamp = ros::Time(t);
     
-    odometry.header.frame_id = "world";
-    // odometry.header.frame_id = "map";
-    // odometry.child_frame_id = "gyro_link";
+    // odometry.header.frame_id = "world";
+    odometry.header.frame_id = "map";
+    odometry.child_frame_id = "gyro_link";
 
     odometry.pose.pose.position.x = P.x();
     odometry.pose.pose.position.y = P.y();
