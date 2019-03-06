@@ -282,41 +282,38 @@ void pubCameraPose(const Estimator &estimator, const std_msgs::Header &header)
 
             // publish msf pose 
  //     ROS_INFO_STREAM("Start publishing msf pose at time " << header);
-      // tf::Matrix3x3 Ric( 0,  0,  1,
-      //                    -1,  0,  0,
-      //                    0,  -1,  0);
-      // tf::Matrix3x3 Ric( 0,  -1,  0,
-      //                    1,  0,  0,
+      // // tf::Matrix3x3 Ric( 0,  0,  1,
+      // //                    -1,  0,  0,
+      // //                    0,  -1,  0);
+      // // tf::Matrix3x3 Ric( 0,  -1,  0,
+      // //                    1,  0,  0,
+      // //                    0,  0,  1);
+      // tf::Matrix3x3 Ric( 1,  0,  0,
+      //                    0,  1,  0,
       //                    0,  0,  1);
-      tf::Matrix3x3 Ric( 1,  0,  0,
-                         0,  1,  0,
-                         0,  0,  1);
-      //        tf::Matrix3x3 Ric( -1,  0, 0,
-      //                   0,  -1, 0,  
-      //                   0,  0, 1);
-      tf::Quaternion quat ( tfScalar(R.x()), tfScalar(R.y()), tfScalar(R.z()), tfScalar(R.w()));
-      tf::Transform tfTiw ( Ric * tf::Matrix3x3( quat ), 
-        Ric * tf::Vector3( 
-            tfScalar(P.x()), 
-            tfScalar(P.y()), 
-            tfScalar(P.z()) 
-            ) 
-        );
+      // tf::Quaternion quat ( tfScalar(R.x()), tfScalar(R.y()), tfScalar(R.z()), tfScalar(R.w()));
+      // tf::Transform tfTiw ( Ric * tf::Matrix3x3( quat ), 
+      //   Ric * tf::Vector3( 
+      //       tfScalar(P.x()), 
+      //       tfScalar(P.y()), 
+      //       tfScalar(P.z()) 
+      //       ) 
+      //   );
 
-        geometry_msgs::Transform gmTwi;
-        tf::transformTFToMsg(tfTiw, gmTwi);
+      //   geometry_msgs::Transform gmTwi;
+      //   tf::transformTFToMsg(tfTiw, gmTwi);
 
-        geometry_msgs::Pose camera_pose_in_imu;
-        camera_pose_in_imu.position.x = gmTwi.translation.x;
-        camera_pose_in_imu.position.y = gmTwi.translation.y;
-        camera_pose_in_imu.position.z = gmTwi.translation.z;
-        camera_pose_in_imu.orientation = gmTwi.rotation;
+      //   geometry_msgs::Pose camera_pose_in_imu;
+      //   camera_pose_in_imu.position.x = gmTwi.translation.x;
+      //   camera_pose_in_imu.position.y = gmTwi.translation.y;
+      //   camera_pose_in_imu.position.z = gmTwi.translation.z;
+      //   camera_pose_in_imu.orientation = gmTwi.rotation;
 
         geometry_msgs::PoseWithCovarianceStamped camera_odom_in_imu;
         camera_odom_in_imu.header = header;
         camera_odom_in_imu.header.frame_id = "map";
         // camera_odom_in_imu.child_frame_id = "gyro_link";
-        camera_odom_in_imu.pose.pose = camera_pose_in_imu;
+        camera_odom_in_imu.pose.pose = odometry.pose.pose; // camera_pose_in_imu;
 
         pub_msf_poses.publish(camera_odom_in_imu);
 //    
