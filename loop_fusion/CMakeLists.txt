@@ -6,6 +6,19 @@ set(CMAKE_CXX_FLAGS "-std=c++11")
 #-DEIGEN_USE_MKL_ALL")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g")
 
+if ($ENV{ROS_DISTRO} STREQUAL "indigo")
+
+find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    std_msgs
+    nav_msgs
+    camera_models
+    cv_bridge_new
+    roslib
+    )
+
+elseif ($ENV{ROS_DISTRO} STREQUAL "kinetic")
+
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     std_msgs
@@ -15,16 +28,13 @@ find_package(catkin REQUIRED COMPONENTS
     roslib
     )
 
+endif()
+
 # customize opencv dir
-if ($ENV{ROS_DISTRO} STREQUAL "indigo")
-      set( OpenCV_DIR /opt/opencv2/share/OpenCV )
-      find_package(OpenCV 2.4.13 REQUIRED)
-elseif ($ENV{ROS_DISTRO} STREQUAL "kinetic")
       set( OpenCV_DIR /opt/opencv3/share/OpenCV )
       find_package(OpenCV 3.4.1 REQUIRED
                  PATHS /opt/opencv3
                  NO_DEFAULT_PATH)
-endif()
 MESSAGE("OpenCV include dir: " ${OpenCV_INCLUDE_DIRS})
 MESSAGE("OpenCV libs: " ${OpenCV_LIBS})
 

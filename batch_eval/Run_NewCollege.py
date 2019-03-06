@@ -5,18 +5,16 @@ import subprocess
 import time
 import signal
 
-SeqStartTime = [0, 60, 230] 
-SeqDuration = [300, 130, 999]
-SeqNameList = ['2019-01-25-15-10_stereo', '2019-01-25-17-30_stereo', '2019-01-24-18-09_stereo'];
+SeqNameList = ['stereo_cam'];
 
-Result_root = '/mnt/DATA/tmp/Hololens/vins_Mono_Baseline/'
+Result_root = '/mnt/DATA/tmp/NewCollege/vins_Mono_Baseline/'
 
 Number_GF_List = [150, 200, 400, 600, 800]; 
 
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
-config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/hololens/hololens-stereo_config'
+config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/newcollege/bumblebee-stereo_config'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
@@ -48,12 +46,12 @@ for ri, num_gf in enumerate(Number_GF_List):
             SeqName = SeqNameList[sn] #+ '_blur_9'
             print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
-            File_rosbag  = '/mnt/DATA/Datasets/Hololens/BagFiles/' + SeqName + '.bag'
+            File_rosbag  = '/mnt/DATA/Datasets/New_College/BagFiles/' + SeqName + '.bag'
             Config_Yaml = config_prefix + '_lmk' + str(num_gf) + '.yaml'
 
             cmd_vinsrun   = str('rosrun vins vins_node ' + Config_Yaml)
             cmd_looprun   = str('rosrun loop_fusion loop_fusion_node ' + Config_Yaml)
-            cmd_rosbag = 'rosbag play ' + File_rosbag + ' --clock -s ' + str(SeqStartTime[sn]) + ' -u ' + str(SeqDuration[sn]) # + ' -r 0.2'
+            cmd_rosbag = 'rosbag play ' + File_rosbag + ' --clock -s 30'
             # 
             cmd_timelog = str('cp /mnt/DATA/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
             cmd_vinslog = str('cp /mnt/DATA/vio.csv ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory_noLC.txt')
