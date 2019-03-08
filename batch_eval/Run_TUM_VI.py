@@ -5,18 +5,16 @@ import subprocess
 import time
 import signal
 
-SeqStartTime = [0, 60, 230] 
-SeqDuration = [300, 130, 999]
-SeqNameList = ['2019-01-25-15-10_stereo', '2019-01-25-17-30_stereo', '2019-01-24-18-09_stereo'];
+SeqNameList = ['room1_512_16', 'room2_512_16', 'room3_512_16', 'room4_512_16', 'room5_512_16', 'room6_512_16', 'not_exist'];
 
-Result_root = '/mnt/DATA/tmp/Hololens/vins_Mono_Baseline/'
+Result_root = '/mnt/DATA/tmp/TUM_VI/vins_Mono_Baseline/'
 
 Number_GF_List = [150, 200, 400, 600, 800]; 
 
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
-config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/hololens/hololens-stereo_config'
+Config_Yaml = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/tum_vi/tum_stereo_config.yaml'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
@@ -48,16 +46,14 @@ for ri, num_gf in enumerate(Number_GF_List):
             SeqName = SeqNameList[sn] #+ '_blur_9'
             print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
-            File_rosbag  = '/mnt/DATA/Datasets/Hololens/BagFiles/' + SeqName + '.bag'
-            Config_Yaml = config_prefix + '_lmk' + str(num_gf) + '.yaml'
-
+            File_rosbag  = '/mnt/DATA/Datasets/TUM_VI/BagFiles/dataset-' + SeqName + '_small_chunks.bag'
+            
             cmd_vinsrun   = str('rosrun vins vins_node ' + Config_Yaml)
             cmd_looprun   = str('rosrun loop_fusion loop_fusion_node ' + Config_Yaml)
-            cmd_rosbag = 'rosbag play ' + File_rosbag + ' --clock -s ' + str(SeqStartTime[sn]) + ' -u ' + str(SeqDuration[sn]) # + ' -r 0.2'
-            # 
+            cmd_rosbag = 'rosbag play ' + File_rosbag + ' --clock' # + ' -u 30' # + ' -r 0.3'
             cmd_timelog = str('cp /mnt/DATA/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
-            cmd_vinslog = str('cp /mnt/DATA/vio.csv ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory_noLC.txt')
-            cmd_looplog = str('cp /mnt/DATA/vio_loop.csv ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory.txt')
+            cmd_vinslog = str('cp /mnt/DATA/vio.csv ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory.txt')
+            cmd_looplog = str('cp /mnt/DATA/vio_loop.csv ' + Experiment_dir + '/' + SeqName + '_KeyFrameTrajectory.txt')
 
             print bcolors.WARNING + "cmd_vinsrun: \n"   + cmd_vinsrun   + bcolors.ENDC
             print bcolors.WARNING + "cmd_looprun: \n"   + cmd_looprun   + bcolors.ENDC
