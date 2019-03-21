@@ -11,12 +11,12 @@ SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'M
 
 Result_root = '/mnt/DATA/tmp/EuRoC/vins_Mono_Baseline/'
 
-Number_GF_List = [150]; 
+Number_GF_List = [150, 200, 400, 600, 800]; 
 
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
-Config_Yaml = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/euroc/euroc_stereo_config.yaml'
+Config_Yaml = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/euroc/euroc_stereo_config'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
@@ -49,6 +49,7 @@ for ri, num_gf in enumerate(Number_GF_List):
             print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
             File_rosbag  = '/mnt/DATA/Datasets/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
+            Config_Yaml = config_prefix + '_lmk' + str(num_gf) + '.yaml'
 
             cmd_vinsrun   = str('rosrun vins vins_node ' + Config_Yaml)
             cmd_looprun   = str('rosrun loop_fusion loop_fusion_node ' + Config_Yaml)
