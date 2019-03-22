@@ -214,7 +214,8 @@ void Estimator::processMeasurements()
 // 		      << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
 // 		      << "; actual time cost per frame = " << logCurFrame.time_total << "              " << std::endl;
 	    if (logCurFrame.time_stamp > 0)
-            logTracking.push_back(logCurFrame);
+	      logTracking.push_back(logCurFrame);
+	    //
 	    logCurFrame.setZero();
 	
             printStatistics(*this, 0);
@@ -437,12 +438,22 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
                 else
                     slideWindow();
             }
+            
+	    // add by Yipu 
+	    // log PnP time cost
+	    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
         }
 
         // stereo + IMU initilization
         if(STEREO && USE_IMU)
         {
             f_manager.initFramePoseByPnP(frame_count, Ps, Rs, tic, ric);
+	    
+            // add by Yipu    
+	    // log PnP time cost
+	    logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
+	    t_optim.tic();
+	    
             f_manager.triangulate(frame_count, Ps, Rs, tic, ric);
             if (frame_count == WINDOW_SIZE)
             {
@@ -464,6 +475,10 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
                 slideWindow();
                 ROS_INFO("Initialization finish!");
             }
+            
+	    // add by Yipu 
+	    // log PnP time cost
+	    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
         }
 
         // stereo only initilization
@@ -474,6 +489,7 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
             // add by Yipu    
 	    // log PnP time cost
 	    logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
+	    t_optim.tic();
 	    
             f_manager.triangulate(frame_count, Ps, Rs, tic, ric);
             optimization();
@@ -506,11 +522,13 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
         TicToc t_solve;
         if(!USE_IMU) {
             f_manager.initFramePoseByPnP(frame_count, Ps, Rs, tic, ric);
-	    
-	    // add by Yipu    
-	    // log PnP time cost
-	    logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
 	}
+	    
+	// add by Yipu    
+	// log PnP time cost
+	logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
+	t_optim.tic();
+	    
         f_manager.triangulate(frame_count, Ps, Rs, tic, ric);
         optimization();
         set<int> removeIndex;
@@ -532,9 +550,9 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
             setParameter();
             ROS_WARN("system reboot!");
 	    
-	// add by Yipu 
-	// log PnP time cost
-	logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
+	    // add by Yipu 
+	    // log PnP time cost
+	    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
 	
             return;
         }

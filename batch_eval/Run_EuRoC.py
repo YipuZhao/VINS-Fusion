@@ -9,14 +9,14 @@ import signal
 # SeqNameList = ['V1_03_difficult', 'V2_02_medium', 'V2_03_difficult'];
 SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
 
-Result_root = '/mnt/DATA/tmp/EuRoC/vins_Mono_Baseline/'
+Result_root = '/mnt/DATA/tmp/EuRoC/vins_Stereo_Speedx1/'
 
-Number_GF_List = [150, 200, 400, 600, 800]; 
+Number_GF_List = [70, 150, 200, 400, 600, 800]; 
 
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
-Config_Yaml = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/euroc/euroc_stereo_config'
+config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/euroc/euroc_stereo_config'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
@@ -54,7 +54,7 @@ for ri, num_gf in enumerate(Number_GF_List):
             cmd_vinsrun   = str('rosrun vins vins_node ' + Config_Yaml)
             cmd_looprun   = str('rosrun loop_fusion loop_fusion_node ' + Config_Yaml)
             cmd_rosbag = 'rosbag play ' + File_rosbag + ' --clock' # + ' -u 30' # + ' -r 0.3'
-            cmd_timelog = str('cp /mnt/DATA/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
+            cmd_timelog = str('cp /mnt/DATA/vins_tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
             cmd_vinslog = str('cp /mnt/DATA/vio.csv ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory.txt')
             cmd_looplog = str('cp /mnt/DATA/vio_loop.csv ' + Experiment_dir + '/' + SeqName + '_KeyFrameTrajectory.txt')
 
