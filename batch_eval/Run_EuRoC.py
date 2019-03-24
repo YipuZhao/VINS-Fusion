@@ -17,6 +17,7 @@ Num_Repeating = 10 # 20 #  5 #
 SleepTime = 5
 
 config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/euroc/euroc_stereo_config'
+# config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/euroc/euroc_stereo_extra_config'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
