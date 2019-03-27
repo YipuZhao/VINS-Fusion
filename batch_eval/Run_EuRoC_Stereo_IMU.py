@@ -19,7 +19,7 @@ Number_GF_List = [70, 150, 200, 400];
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
-config_prefix = '/home/yipuzhao/vins_ws/src/VINS-Fusion/config/euroc/euroc_stereo_imu_config'
+config_prefix = '/home/yipuzhao/catkin_ws/src/VINS-Fusion/config/euroc/euroc_stereo_imu_config'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
