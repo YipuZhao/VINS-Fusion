@@ -40,7 +40,7 @@ find_package(OpenCV 3.4.1 REQUIRED
 MESSAGE("OpenCV include dir: " ${OpenCV_INCLUDE_DIRS})
 MESSAGE("OpenCV libs: " ${OpenCV_LIBS})
 
-message(WARNING "OpenCV_VERSION: ${OpenCV_VERSION}")
+# message(WARNING "OpenCV_VERSION: ${OpenCV_VERSION}")
 
 set( Ceres_DIR /opt/ceres/lib/cmake/Ceres )
 find_package(Ceres REQUIRED)

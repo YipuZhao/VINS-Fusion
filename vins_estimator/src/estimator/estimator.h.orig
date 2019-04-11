@@ -235,8 +235,7 @@ class Estimator
     Eigen::Quaterniond latest_Q;
 
     bool initFirstPoseFlag;
-    bool initThreadFlag;
-
+<<<<<<< HEAD
 
     //
     
@@ -292,4 +291,8 @@ class Estimator
 
 	std::cout << "Finished saving track! " << std::endl;
     }
+
+=======
+    bool initThreadFlag;
+>>>>>>> e9d9911a99a38d68bbc0eb4f9a27277f7d2c6d4f
 };
