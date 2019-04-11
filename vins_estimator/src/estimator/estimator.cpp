@@ -194,13 +194,13 @@ logCurFrame.time_feature = featureTrackerTime.toc() * 1e-3;
         TicToc processTime;
         processMeasurements();
         printf("process time: %f\n", processTime.toc());
-	//
-// 	logCurFrame.time_total = logCurFrame.time_feature + processTime.toc();
+    //
+//  logCurFrame.time_total = logCurFrame.time_feature + processTime.toc();
 //         std::cout << "timestamp = " << logCurFrame.time_stamp 
-// 		  << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
-// 		  << "; actual time cost per frame = " << logCurFrame.time_total << "              " << std::endl;
+//        << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
+//        << "; actual time cost per frame = " << logCurFrame.time_total << "              " << std::endl;
 //         logTracking.push_back(logCurFrame);
-// 	logCurFrame.setZero();
+//  logCurFrame.setZero();
     }
     
 }
@@ -323,17 +323,17 @@ void Estimator::processMeasurements()
             processImage(feature.second, feature.first);
             prevTime = curTime;
 
-	    //
-	    // std::cout << "curTime = " << curTime  << std::endl;
-	    logCurFrame.time_total = ros::Time::now().toSec() - curTime;
-// 	    std::cout << "timestamp = " << logCurFrame.time_stamp 
-// 		      << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
-// 		      << "; actual time cost per frame = " << logCurFrame.time_total << "              " << std::endl;
-	    if (logCurFrame.time_stamp > 0)
-	      logTracking.push_back(logCurFrame);
-	    //
-	    logCurFrame.setZero();
-	
+        //
+        // std::cout << "curTime = " << curTime  << std::endl;
+        logCurFrame.time_total = ros::Time::now().toSec() - curTime;
+//      std::cout << "timestamp = " << logCurFrame.time_stamp 
+//            << "; summed time cost per frame = " << logCurFrame.time_feature + logCurFrame.time_poseTrack + logCurFrame.time_windowOpt
+//            << "; actual time cost per frame = " << logCurFrame.time_total << "              " << std::endl;
+        if (logCurFrame.time_stamp > 0)
+          logTracking.push_back(logCurFrame);
+        //
+        logCurFrame.setZero();
+    
             printStatistics(*this, 0);
 
             std_msgs::Header header;
@@ -508,21 +508,21 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
                     slideWindow();
             }
             
-	    // add by Yipu 
-	    // log PnP time cost
-	    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
+        // add by Yipu 
+        // log PnP time cost
+        logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
         }
 
         // stereo + IMU initilization
         if(STEREO && USE_IMU)
         {
             f_manager.initFramePoseByPnP(frame_count, Ps, Rs, tic, ric);
-	    
+        
             // add by Yipu    
-	    // log PnP time cost
-	    logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
-	    t_optim.tic();
-	    
+        // log PnP time cost
+        logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
+        t_optim.tic();
+        
             f_manager.triangulate(frame_count, Ps, Rs, tic, ric);
             if (frame_count == WINDOW_SIZE)
             {
@@ -545,24 +545,23 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
                 ROS_INFO("Initialization finish!");
             }
             
-	    // add by Yipu 
-	    // log PnP time cost
-	    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
+        // add by Yipu 
+        // log PnP time cost
+        logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
         }
 
         // stereo only initilization
         if(STEREO && !USE_IMU)
         {
             f_manager.initFramePoseByPnP(frame_count, Ps, Rs, tic, ric);
-	    
+        
             // add by Yipu    
-	    // log PnP time cost
-	    logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
-	    t_optim.tic();
-	    
+        // log PnP time cost
+        logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
+        t_optim.tic();
+        
             f_manager.triangulate(frame_count, Ps, Rs, tic, ric);
             optimization();
-
             if(frame_count == WINDOW_SIZE)
             {
                 solver_flag = NON_LINEAR;
@@ -570,9 +569,9 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
                 ROS_INFO("Initialization finish!");
             }
             
-	    // add by Yipu 
-	    // log PnP time cost
-	    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
+        // add by Yipu 
+        // log PnP time cost
+        logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
         }
 
         if(frame_count < WINDOW_SIZE)
@@ -592,13 +591,13 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
         TicToc t_solve;
         if(!USE_IMU) {
             f_manager.initFramePoseByPnP(frame_count, Ps, Rs, tic, ric);
-	}
-	    
-	// add by Yipu    
-	// log PnP time cost
-	logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
-	t_optim.tic();
-	    
+    }
+        
+    // add by Yipu    
+    // log PnP time cost
+    logCurFrame.time_poseTrack = t_optim.toc() * 1e-3;
+    t_optim.tic();
+        
         f_manager.triangulate(frame_count, Ps, Rs, tic, ric);
         optimization();
         set<int> removeIndex;
@@ -619,11 +618,11 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
             clearState();
             setParameter();
             ROS_WARN("system reboot!");
-	    
-	    // add by Yipu 
-	    // log PnP time cost
-	    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
-	
+        
+        // add by Yipu 
+        // log PnP time cost
+        logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
+    
             return;
         }
 
@@ -639,10 +638,10 @@ void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<doubl
         last_R0 = Rs[0];
         last_P0 = Ps[0];
         updateLatestStates();
-	
-	// add by Yipu 
-	// log PnP time cost
-	logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
+    
+    // add by Yipu 
+    // log PnP time cost
+    logCurFrame.time_windowOpt = t_optim.toc() * 1e-3;
     }  
 }
 

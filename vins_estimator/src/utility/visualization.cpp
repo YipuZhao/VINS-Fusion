@@ -47,7 +47,7 @@ void registerPub(ros::NodeHandle &n)
     pub_keyframe_pose = n.advertise<nav_msgs::Odometry>("keyframe_pose", 1000);
     pub_keyframe_point = n.advertise<sensor_msgs::PointCloud>("keyframe_point", 1000);
     pub_extrinsic = n.advertise<nav_msgs::Odometry>("extrinsic", 1000);
-pub_image_track = n.advertise<sensor_msgs::Image>("image_track", 1000);
+    pub_image_track = n.advertise<sensor_msgs::Image>("image_track", 1000);
 
     //
     pub_msf_poses = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("pose_cam_for_msf", 1000);
@@ -125,7 +125,6 @@ void pubTrackImage(const cv::Mat &imgTrack, const double t)
     sensor_msgs::ImagePtr imgTrackMsg = cv_bridge::CvImage(header, "bgr8", imgTrack).toImageMsg();
     pub_image_track.publish(imgTrackMsg);
 }
-
 
 
 void printStatistics(const Estimator &estimator, double t)
@@ -218,7 +217,7 @@ void pubOdometry(const Estimator &estimator, const std_msgs::Header &header)
 //               << estimator.Vs[WINDOW_SIZE].x() << ","
 //               << estimator.Vs[WINDOW_SIZE].y() << ","
 //               << estimator.Vs[WINDOW_SIZE].z() << "," << endl;
-	foutC.setf(ios::fixed, ios::floatfield);
+    foutC.setf(ios::fixed, ios::floatfield);
         foutC.precision(6);
         foutC << header.stamp.toSec() << " ";
         foutC.precision(7);
@@ -230,9 +229,9 @@ void pubOdometry(const Estimator &estimator, const std_msgs::Header &header)
               << tmp_Q.z() << " "
               << tmp_Q.w() << endl;
         foutC.close();
-        Eigen::Vector3d tmp_T = estimator.Ps[WINDOW_SIZE];
-        printf("time: %f, t: %f %f %f q: %f %f %f %f \n", header.stamp.toSec(), tmp_T.x(), tmp_T.y(), tmp_T.z(),
-                                                          tmp_Q.w(), tmp_Q.x(), tmp_Q.y(), tmp_Q.z());
+//         Eigen::Vector3d tmp_T = estimator.Ps[WINDOW_SIZE];
+//         printf("time: %f, t: %f %f %f q: %f %f %f %f \n", header.stamp.toSec(), tmp_T.x(), tmp_T.y(), tmp_T.z(),
+//                                                           tmp_Q.w(), tmp_Q.x(), tmp_Q.y(), tmp_Q.z());
     }
 }
 
