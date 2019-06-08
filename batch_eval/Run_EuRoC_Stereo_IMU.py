@@ -6,15 +6,15 @@ import time
 import signal
 
 # SeqNameList = ['V2_02_medium'];
-SeqNameList = ['MH_01_easy', 'V2_02_medium', 'MH_05_difficult'];
-# SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
+# SeqNameList = ['MH_01_easy', 'V2_02_medium', 'MH_05_difficult'];
+SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
 
 Result_root = '/mnt/DATA/tmp/EuRoC/vins_Stereo_IMU_Speedx'
 
-Playback_Rate_List = [1.0, 2.0, 4.0];
+Playback_Rate_List = [1.0] # [1.0, 2.0, 4.0];
 
 # Number_GF_List = [70, 150, 200, 400, 600, 800]; 
-Number_GF_List = [70, 150, 200, 400]; 
+Number_GF_List = [150] # [70, 150, 200, 400]; 
 
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
