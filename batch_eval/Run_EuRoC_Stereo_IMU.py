@@ -5,9 +5,9 @@ import subprocess
 import time
 import signal
 
-# SeqNameList = ['V2_02_medium'];
+SeqNameList = ['MH_04_difficult'];
 # SeqNameList = ['MH_01_easy', 'V2_02_medium', 'MH_05_difficult'];
-SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
+# SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
 
 Result_root = '/mnt/DATA/tmp/EuRoC/vins_Stereo_IMU_Speedx'
 
