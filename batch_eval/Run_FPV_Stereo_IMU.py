@@ -5,11 +5,11 @@ import subprocess
 import time
 import signal
 
-# SeqNameList = ['V2_02_medium'];
-# SeqNameList = ['MH_01_easy', 'V2_02_medium', 'MH_05_difficult'];
-SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
+SeqNameList = ['indoor_forward_3', 'indoor_forward_5', 'indoor_forward_6', \
+               'indoor_forward_7', 'indoor_forward_9', 'indoor_forward_10'];
+# SeqNameList = ['indoor_forward_5'];
 
-Result_root = '/mnt/DATA/tmp/EuRoC/vins_Stereo_IMU_Speedx'
+Result_root = '/mnt/DATA/tmp/UZH_FPV/vins_Stereo_IMU_Speedx'
 
 Playback_Rate_List = [1.0] # [1.0, 2.0, 4.0];
 
@@ -19,7 +19,7 @@ Number_GF_List = [150] # [70, 150, 200, 400];
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
-config_prefix = '/home/yipuzhao/catkin_ws/src/vins_fusion/config/euroc/euroc_stereo_imu_config'
+config_prefix = '/home/yipuzhao/catkin_ws/src/vins_fusion/config/fpv/fpv_stereo_imu_config'
 
 #----------------------------------------------------------------------------------------------------------------------
 class bcolors:
@@ -50,10 +50,10 @@ for pi, rate in enumerate(Playback_Rate_List):
                 
                 print bcolors.ALERT + "====================================================================" + bcolors.ENDC
 
-                SeqName = SeqNameList[sn] #+ '_blur_9'
+                SeqName = SeqNameList[sn]
                 print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
-                File_rosbag  = '/mnt/DATA/Datasets/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
+                File_rosbag  = '/mnt/DATA/Datasets/UZH_FPV/BagFiles/' + SeqName + '_snapdragon_with_gt.bag'
                 Config_Yaml = config_prefix + '_lmk' + str(num_gf) + '.yaml'
 
                 cmd_vinsrun   = str('rosrun vins vins_node ' + Config_Yaml)
