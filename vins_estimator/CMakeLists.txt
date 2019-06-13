@@ -49,6 +49,9 @@ include_directories(${catkin_INCLUDE_DIRS} ${CERES_INCLUDE_DIRS})
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(Eigen3)
+# set( EIGEN3_INCLUDE_DIR /opt/eigen33/include/eigen3/ )
+MESSAGE("EIGEN include dir: " ${EIGEN3_INCLUDE_DIR})
+
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
