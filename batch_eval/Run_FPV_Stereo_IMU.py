@@ -9,7 +9,7 @@ SeqNameList = ['indoor_forward_3', 'indoor_forward_5', 'indoor_forward_6', \
                'indoor_forward_7', 'indoor_forward_9', 'indoor_forward_10'];
 # SeqNameList = ['indoor_forward_5'];
 
-Result_root = '/mnt/DATA/tmp/UZH_FPV/vins_Stereo_IMU_Speedx'
+Result_root = '/mnt/DATA/tmp/UZH_FPV/vins_Stereo_IMUv2_Speedx'
 
 Playback_Rate_List = [1.0] # [1.0, 2.0, 4.0];
 
