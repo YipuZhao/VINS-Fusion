@@ -40,6 +40,8 @@ MESSAGE("OpenCV libs: " ${OpenCV_LIBS})
 
 set( Ceres_DIR /opt/ceres/lib/cmake/Ceres )
 find_package(Ceres REQUIRED)
+MESSAGE("Ceres includes: " ${CERES_INCLUDE_DIRS})
+MESSAGE("Ceres libs: " ${CERES_LIBRARIES})
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(Eigen3)
